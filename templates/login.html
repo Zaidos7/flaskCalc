@@ -1,0 +1,51 @@
+{% extends "layout.html" %} {% block title %} Log In {% endblock %} {% block
+main %}
+<form action="/login" method="post">
+  <div class="mb-3">
+    <input
+      style="font-size: 40px"
+      autocomplete="off"
+      autofocus
+      class="form-control mx-auto w-auto"
+      name="username"
+      placeholder="Username"
+      type="text"
+    />
+  </div>
+  <div class="mb-3">
+    <input
+      style="font-size: 40px"
+      class="form-control mx-auto w-auto"
+      name="password"
+      placeholder="Password"
+      type="password"
+    />
+  </div>
+  <button style="font-size: 40px" class="btn btn-primary" type="submit">
+    Log In
+  </button>
+  <h3
+    id="errorMessage"
+    class=""
+    style="
+      color: #dc3545;
+      margin-top: 16px;
+      border: 3px solid #dc3545;
+      background-color: rgb(241, 185, 190);
+      padding: 8px;
+      border-radius: 5px;
+      visibility: hidden;
+    "
+  >
+    {{error}}
+  </h3>
+</form>
+<script>
+  const errorMessageElement = document.getElementById("errorMessage");
+  x = errorMessageElement.textContent;
+  // WHY IS THE EMPTY ERROR LENGTH 9???? I THOUGHT IT WAS 0?!!!!! OR NULL?!!!!
+  if (x.length != 9) {
+    errorMessageElement.style.visibility = "visible"; // Show the element
+  }
+</script>
+{% endblock %}

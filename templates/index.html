@@ -1,0 +1,191 @@
+{% extends "layout.html" %} {% block title %} Home Page {% endblock %} {% block
+main %}
+<div
+  class="container"
+  style="
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+  "
+>
+  <div
+    id="div2"
+    class="div2 border-5 rounded-3"
+    style="
+      border: 5px solid #005a9c;
+      width: 600px;
+      min-height: 750px;
+      max-height: 750px;
+      margin-bottom: 20px;
+      margin-right: 20px;
+      margin-left: 20px;
+    "
+  >
+    <div class="calculator">
+      <textarea id="display" readonly placeholder="0"></textarea>
+      <table>
+        <tr>
+          <td>
+            <button class="clear" onclick="clearDisplay()">C</button>
+          </td>
+          <td>
+            <button class="operator" onclick="appendToDisplay('/')">/</button>
+          </td>
+          <td>
+            <button class="operator" onclick="appendToDisplay('*')">*</button>
+          </td>
+          <td>
+            <button class="operator" onclick="appendToDisplay('-')">-</button>
+          </td>
+        </tr>
+        <tr>
+          <td><button onclick="appendToDisplay('7')">7</button></td>
+          <td><button onclick="appendToDisplay('8')">8</button></td>
+          <td><button onclick="appendToDisplay('9')">9</button></td>
+          <td rowspan="2">
+            <button class="operator plus" onclick="appendToDisplay('+')">
+              +
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td><button onclick="appendToDisplay('4')">4</button></td>
+          <td><button onclick="appendToDisplay('5')">5</button></td>
+          <td><button onclick="appendToDisplay('6')">6</button></td>
+        </tr>
+        <tr>
+          <td><button onclick="appendToDisplay('1')">1</button></td>
+          <td><button onclick="appendToDisplay('2')">2</button></td>
+          <td><button onclick="appendToDisplay('3')">3</button></td>
+          <td rowspan="2">
+            <button class="equals" onclick="calculateResult()">=</button>
+          </td>
+        </tr>
+        <tr>
+          <td><button onclick="appendToDisplay('.')">.</button></td>
+          <td><button onclick="appendToDisplay('0')">0</button></td>
+          <td><button onclick="backspace()">&#x232B;</button></td>
+        </tr>
+      </table>
+    </div>
+    <script>
+      // the parts of the script that weren't tought in cs50 where learned through my Uni's own courses
+      let lock = 0;
+      // append display contents and result to history div
+      function appendToHistory(display, result) {
+        if (lock == 0) {
+          const history = document.getElementById("history");
+          history.innerHTML += "<p>" + display + " = " + result + "</p>";
+          history.innerHTML += "<hr/>";
+        }
+      }
+      // clear history
+      function clearHistory() {
+        if (lock == 0) {
+          const history = document.getElementById("history");
+          history.innerHTML =
+            "<p style='margin-top: 4px; margin-bottom: 4px'>History...</p><hr/>";
+        }
+      }
+
+      // Lock history
+      function lockHistory() {
+        if (lock == 0) {
+          lock = 1;
+          document.getElementById("lock").innerHTML = "Unlock";
+        } else {
+          lock = 0;
+          document.getElementById("lock").innerHTML = "Lock";
+        }
+      }
+      function copyLast() {
+        const history = document.getElementById("history");
+        const paragraphs = history.getElementsByTagName("p");
+
+        if (paragraphs.length > 0) {
+          const lastParagraph = paragraphs[paragraphs.length - 1];
+
+          // Ensure we aren't copying the "History..." label if the list is empty
+          if (lastParagraph.textContent !== "History...") {
+            const text = lastParagraph.textContent;
+            navigator.clipboard.writeText(text);
+            alert("Copied: " + text); // Optional feedback
+          }
+        }
+      }
+
+      // copy last calculation from history
+      function copyLast() {
+        const history = document.getElementById("history");
+        const paragraphs = history.getElementsByTagName("p");
+
+        if (paragraphs.length > 0) {
+          const lastParagraph = paragraphs[paragraphs.length - 1];
+          const text = lastParagraph.textContent;
+
+          // copy text to clipboard
+          navigator.clipboard.writeText(text);
+        }
+      }
+
+      // add pressed button to display
+      function appendToDisplay(value) {
+        document.getElementById("display").value += value;
+      }
+
+      // remove last character
+      function backspace() {
+        const display = document.getElementById("display");
+        if (display.value != "") {
+          display.value = display.value.slice(0, -1);
+        }
+      }
+
+      // clear display
+      function clearDisplay() {
+        document.getElementById("display").value = "";
+      }
+
+      // calculate the string in the display
+      function calculateResult() {
+        const display = document.getElementById("display");
+        try {
+          displayCopy = display.value;
+          display.value = eval(display.value);
+          appendToHistory(displayCopy, display.value);
+        } catch (e) {
+          display.value = "Syntax Error";
+        }
+      }
+    </script>
+  </div>
+  <div
+    id="div1"
+    class="div1 border-5 rounded-3"
+    style="
+      border: 5px solid #005a9c;
+      width: 600px;
+      height: 750px;
+      font-size: 2rem;
+      margin-bottom: 20px;
+      margin-right: 20px;
+      margin-left: 20px;
+    "
+  >
+    <div id="history">
+      <p style="margin-top: 4px; margin-bottom: 4px">History...</p>
+      <hr />
+    </div>
+    <hr />
+    <button id="clear" class="operator" onclick="clearHistory()">Clear</button>
+    <button id="lock" class="operator" onclick="lockHistory()">Lock</button>
+    <button id="copy" class="operator" onclick="copyLast()">Copy last</button>
+  </div>
+</div>
+
+{% endblock %}

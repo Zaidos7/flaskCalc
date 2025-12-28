@@ -1,5 +1,4 @@
 # Simple Flask Calculator with history
-## Make sure to add a "project.db" database!
 
 ## Description:
 
